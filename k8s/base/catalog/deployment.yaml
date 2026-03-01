@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog
+  namespace: dachshaus-services
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: catalog
+  template:
+    metadata:
+      labels:
+        app: catalog
+    spec:
+      serviceAccountName: catalog
+      containers:
+        - name: catalog
+          image: catalog:latest
+          ports:
+            - containerPort: 8080

@@ -1,0 +1,14 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: gateway-routes
+  namespace: dachshaus-public
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - gateway
+  http:
+    - route:
+        - destination:
+            host: gateway

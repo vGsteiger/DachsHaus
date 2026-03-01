@@ -1,0 +1,19 @@
+# Code owners for DachsHaus project
+
+# Global owners
+* @vGsteiger
+
+# Infrastructure
+/infra/** @vGsteiger
+/k8s/** @vGsteiger
+
+# TypeScript services
+/gateway/** @vGsteiger
+/storefront/** @vGsteiger
+/packages/** @vGsteiger
+
+# Kotlin services
+/services/** @vGsteiger
+
+# CI/CD
+/.github/** @vGsteiger

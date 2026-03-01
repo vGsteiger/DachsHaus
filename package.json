@@ -1,0 +1,26 @@
+{
+  "name": "dachshaus",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A fully scalable application for an online shop with security and deployability at its core",
+  "workspaces": [
+    "packages/*",
+    "gateway",
+    "storefront"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "clean": "turbo run clean"
+  },
+  "devDependencies": {
+    "turbo": "^1.10.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@8.15.0"
+}

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dachshaus-public
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dachshaus-services
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dachshaus-data
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dachshaus-kafka
