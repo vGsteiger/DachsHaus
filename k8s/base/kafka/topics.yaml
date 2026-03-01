@@ -1,0 +1,21 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: user-registered
+  namespace: dachshaus-kafka
+  labels:
+    strimzi.io/cluster: dachshaus-cluster
+spec:
+  partitions: 3
+  replicas: 3
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: order-placed
+  namespace: dachshaus-kafka
+  labels:
+    strimzi.io/cluster: dachshaus-cluster
+spec:
+  partitions: 3
+  replicas: 3

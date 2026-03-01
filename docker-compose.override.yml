@@ -1,0 +1,31 @@
+version: '3.9'
+
+# Local development overrides
+services:
+  gateway:
+    ports:
+      - "4000:4000"
+
+  storefront:
+    ports:
+      - "3000:3000"
+
+  auth:
+    ports:
+      - "8081:8080"
+
+  catalog:
+    ports:
+      - "8082:8080"
+
+  order:
+    ports:
+      - "8083:8080"
+
+  customer:
+    ports:
+      - "8084:8080"
+
+  cart:
+    ports:
+      - "8085:8080"

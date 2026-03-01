@@ -1,0 +1,46 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - namespaces.yaml
+  - network-policies.yaml
+  - istio/peer-authentication.yaml
+  - istio/authorization-policies.yaml
+  - istio/virtual-services.yaml
+  - gateway/deployment.yaml
+  - gateway/service.yaml
+  - gateway/hpa.yaml
+  - gateway/ingress.yaml
+  - gateway/service-account.yaml
+  - auth/deployment.yaml
+  - auth/service.yaml
+  - auth/hpa.yaml
+  - auth/service-account.yaml
+  - catalog/deployment.yaml
+  - catalog/service.yaml
+  - catalog/hpa.yaml
+  - catalog/service-account.yaml
+  - order/deployment.yaml
+  - order/service.yaml
+  - order/hpa.yaml
+  - order/service-account.yaml
+  - customer/deployment.yaml
+  - customer/service.yaml
+  - customer/hpa.yaml
+  - customer/service-account.yaml
+  - cart/deployment.yaml
+  - cart/service.yaml
+  - cart/hpa.yaml
+  - cart/service-account.yaml
+  - streams/deployment.yaml
+  - streams/service.yaml
+  - streams/service-account.yaml
+  - storefront/deployment.yaml
+  - storefront/service.yaml
+  - storefront/hpa.yaml
+  - kafka/kafka-cluster.yaml
+  - kafka/topics.yaml
+  - kafka/users.yaml
+  - kafka/kafka-metrics-config.yaml
+  - redis/statefulset.yaml
+  - redis/service.yaml

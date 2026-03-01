@@ -1,0 +1,20 @@
+import type { ReactNode } from 'react';
+
+import { Layout } from '@/components/layout/Layout';
+import { ApolloProvider } from '@/lib/apollo/provider';
+import { AuthProvider } from '@/lib/auth/context';
+import './globals.css';
+
+export default function RootLayout({ children }: { children: ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        <ApolloProvider>
+          <AuthProvider>
+            <Layout>{children}</Layout>
+          </AuthProvider>
+        </ApolloProvider>
+      </body>
+    </html>
+  );
+}

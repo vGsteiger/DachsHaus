@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: streams
+  namespace: dachshaus-services
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: streams
+  template:
+    metadata:
+      labels:
+        app: streams
+    spec:
+      serviceAccountName: streams
+      containers:
+        - name: streams
+          image: streams:latest
+          ports:
+            - containerPort: 8080
