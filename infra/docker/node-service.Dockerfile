@@ -1,6 +1,6 @@
 # Multi-stage Dockerfile for Node.js services
 # Stage 1: Build
-FROM node:20-alpine AS build
+FROM node:25-alpine AS build
 
 ARG SERVICE_NAME
 WORKDIR /app
@@ -25,7 +25,7 @@ RUN pnpm install --frozen-lockfile
 RUN pnpm turbo run build --filter=${SERVICE_NAME}
 
 # Stage 2: Runtime
-FROM node:20-alpine
+FROM node:25-alpine
 
 ARG SERVICE_NAME
 WORKDIR /app
