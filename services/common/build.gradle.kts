@@ -1,5 +1,7 @@
 plugins {
     kotlin("jvm")
+    id("org.springframework.boot")
+    id("io.spring.dependency-management")
 }
 
 dependencies {
@@ -10,10 +12,10 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.16.0")
 }
 
-tasks.bootJar {
+tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
     enabled = false
 }
 
-tasks.jar {
+tasks.named<Jar>("jar") {
     enabled = true
 }

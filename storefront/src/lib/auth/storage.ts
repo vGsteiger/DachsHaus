@@ -1,6 +1,6 @@
 // Cookie-based token storage
 export const storage = {
   getToken: () => null,
-  setToken: (token: string) => {},
+  setToken: (_token: string) => {},
   removeToken: () => {},
 };
