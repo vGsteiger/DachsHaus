@@ -21,7 +21,7 @@ COPY services/${SERVICE_NAME} ./${SERVICE_NAME}
 RUN ./gradlew :${SERVICE_NAME}:bootJar --no-daemon
 
 # Stage 2: Runtime
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:25-jre-alpine
 
 ARG SERVICE_NAME
 WORKDIR /app
