@@ -1,7 +1,7 @@
 module.exports = {
   extends: ['@dachshaus/eslint-config'],
   parserOptions: {
-    project: './tsconfig.json',
+    project: './tsconfig.lint.json',
     tsconfigRootDir: __dirname,
   },
   rules: {
