@@ -20,7 +20,7 @@
     "@dachshaus/tsconfig": "workspace:*",
     "@dachshaus/eslint-config": "workspace:*",
     "@dachshaus/graphql-schema": "workspace:*",
-    "@types/node": "^20.0.0",
+    "@types/node": "^25.3.3",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "@types/jest": "^29.5.0",
