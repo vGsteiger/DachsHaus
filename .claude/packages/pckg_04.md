@@ -24,8 +24,9 @@ Dedicated authentication service — owns credentials, issues RSA-signed JWTs, p
 ```
 POST /auth/verify
   Request:  { "token": "eyJhbG..." }
-  Response: { "valid": true, "userId": "uuid", "email": "...", "roles": ["customer"] }
-            { "valid": false, "reason": "expired|revoked|invalid" }
+  Response 200: { "valid": true, "userId": "uuid", "email": "...", "roles": ["customer"] }
+  Response 200: { "valid": false, "reason": "expired|revoked|invalid" }
+  Note: always HTTP 200; consumers check the `valid` field
   Latency target: <5ms (in-memory revocation check + RSA verify)
 
 GET /auth/.well-known/jwks.json
@@ -65,7 +66,7 @@ query authStatus: AuthStatus!
 - [ ] `POST /auth/verify` returns valid result for a fresh JWT in <5ms
 - [ ] `POST /auth/verify` returns `{ valid: false, reason: "revoked" }` after revocation
 - [ ] `register` creates credential, hashes password with BCrypt(12), publishes `user.registered`
-- [ ] `login` returns 401 after 5 failures within 15 minutes
+- [ ] `login` returns 429 after 5 failed attempts within 15 minutes (per-email throttle)
 - [ ] `refreshToken` rotates: old token revoked, new pair issued
 - [ ] `logout` revokes all refresh tokens for user, publishes revocation event
 - [ ] Revocation cache syncs across instances via Kafka consumer

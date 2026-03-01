@@ -29,6 +29,12 @@ TERRAFORM_SA:    GCP SA for terraform (has broad IAM)
 DEPLOY_SA:       GCP SA for build+deploy (Artifact Registry write, GKE deploy)
 ```
 
+### Repository Variables Required
+```
+REGION:          GCP region for Artifact Registry (e.g. europe-west1)
+PROJECT_ID:      GCP project ID (e.g. my-project-123)
+```
+
 ### Image Tagging
 ```
 ${REGION}-docker.pkg.dev/${PROJECT_ID}/dachshaus/${service}:${git_sha}

@@ -32,8 +32,9 @@ Gateway listens on :4000/graphql
 POST http://auth:8084/auth/verify
 Body: { "token": "eyJ..." }
 Response 200: { "valid": true, "userId": "uuid", "email": "...", "roles": ["customer"] }
-Response 401: { "valid": false, "reason": "expired|revoked|invalid" }
+Response 200: { "valid": false, "reason": "expired|revoked|invalid" }
 ```
+Note: Auth Service always returns HTTP 200; gateway checks the `valid` field to determine authentication state.
 
 ### Outbound to Subgraphs
 Forwarded headers: `X-Gateway-Signature`, `X-User-Id`, `X-User-Roles`, `X-Request-Id`

@@ -15,7 +15,7 @@ Production-ready Kubernetes deployment — namespaces, network policies, Istio m
 - Per-service: `Deployment`, `Service`, `HPA`, `ServiceAccount` (with WI annotation)
 - Strimzi: `Kafka` cluster CRD, all `KafkaTopic` CRDs, all `KafkaUser` CRDs, metrics ConfigMap
 - Redis: `StatefulSet` + `Service` (dev only, prod uses Memorystore)
-- Ingress: NGINX with TLS termination
+- Ingress: Istio ingress gateway with TLS termination (integrates with `VirtualService` routing)
 - Kustomize overlays: dev (low resources), prod (HA resources)
 - External Secrets: `ExternalSecret` CRDs pulling from GCP Secret Manager
 - Deploy scripts: `setup-cluster.sh`, `deploy.sh`

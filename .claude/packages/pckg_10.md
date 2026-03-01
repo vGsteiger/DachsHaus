@@ -28,8 +28,8 @@ WebSocket: derived from GraphQL URL (ws://...)
 ### Auth Flow
 1. Login/Register → receives `{ accessToken, refreshToken }`
 2. `accessToken` stored in memory (AuthContext state)
-3. `refreshToken` stored in cookie (`httpOnly: false` for SSR, `secure: true`, `sameSite: strict`)
-4. On mount: if refresh cookie exists → call `refreshToken` mutation
+3. `refreshToken` stored in `HttpOnly` cookie (`httpOnly: true`, `secure: true`, `sameSite: strict`), only readable server-side
+4. On mount: server-side check detects refresh cookie → Next.js API route calls `refreshToken` mutation and returns fresh `accessToken` to the client
 5. On 401 from errorLink → dispatch `auth:expired` event → logout
 
 ### Pages
