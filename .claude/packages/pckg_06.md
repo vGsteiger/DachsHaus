@@ -68,6 +68,14 @@ CONFIRMED → CANCELLED (customer cancel)
 Any → REFUNDED (admin)
 ```
 
+Additional status transitions beyond the four `OrderEvent` Kafka types are driven by:
+- `PAID`: triggered internally when payment webhook is received (REST callback, not a Kafka event)
+- `FULFILLING`: triggered by warehouse system via admin mutation `markFulfilling(orderId: ID!)`
+- `DELIVERED`: triggered by courier webhook (REST callback)
+- `REFUNDED`: triggered by admin mutation `refundOrder(orderId: ID!, reason: String)`
+
+These four admin/webhook-triggered transitions are internal to the Order Service and do not produce Kafka events consumed by other services.
+
 ## Acceptance Criteria
 
 - [ ] `checkout` atomically gets cart, creates order, publishes event
