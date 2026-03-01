@@ -2,5 +2,6 @@
 jest.config.js
 jest.setup.js
 next.config.js
+next-env.d.ts
 postcss.config.js
 tailwind.config.js
