@@ -1,6 +1,6 @@
 # Multi-stage Dockerfile for Kotlin services
 # Stage 1: Build
-FROM gradle:8.5-jdk21 AS build
+FROM gradle:9.4-jdk21 AS build
 
 ARG SERVICE_NAME
 WORKDIR /app
