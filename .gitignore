@@ -44,6 +44,15 @@ out/
 .env
 .env.local
 .env.*.local
+.env.backup.*
+
+# Installation artifacts
+CREDENTIALS.txt
+install.log
+keys/
+backups/
+docker-compose.prod.yml
+logrotate.conf
 
 # IDE
 .idea/

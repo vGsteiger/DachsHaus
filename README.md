@@ -182,14 +182,46 @@ dachshaus/
 
 ## 🚀 Getting Started
 
+### ⚡ One-Click Installation (Recommended)
+
+The fastest way to get DachsHaus up and running is using our automated installer:
+
+```bash
+# Clone the repository
+git clone https://github.com/vGsteiger/DachsHaus.git
+cd DachsHaus
+
+# Run the one-click installer
+./install.sh
+```
+
+**That's it!** The installer will:
+- ✓ Check system requirements automatically
+- ✓ Generate secure credentials (HMAC secrets, JWT keys, passwords)
+- ✓ Set up all services with health checks
+- ✓ Configure production-ready settings
+- ✓ Create backup and restore scripts
+- ✓ Verify the installation
+
+**After installation:**
+- 🌐 **Storefront**: http://localhost:3000
+- 🔧 **GraphQL Playground**: http://localhost:4000/graphql
+- 📄 **Credentials**: See `CREDENTIALS.txt` for all passwords and access info
+
+For detailed installation instructions, troubleshooting, and advanced configuration, see **[INSTALL.md](INSTALL.md)**.
+
+---
+
 ### Prerequisites
 
-- **Docker** & **Docker Compose** (for local development)
-- **Node.js 20+** & **pnpm** (for TypeScript services)
-- **Java 21** (for Kotlin services)
-- **Make** (optional, for convenience)
+- **Docker** (v20.10+) & **Docker Compose** (v2.0+)
+- **Make** - For convenience commands
+- **10GB+ free disk space**
+- **4GB+ RAM** (8GB recommended)
 
-### Quick Start
+### Manual Installation (Advanced)
+
+If you prefer manual control over the installation:
 
 1. **Clone the repository**
    ```bash
@@ -203,7 +235,14 @@ dachshaus/
    # Edit .env with your configuration (defaults work for local dev)
    ```
 
-3. **Start the entire stack**
+3. **Generate JWT keys**
+   ```bash
+   mkdir -p keys
+   openssl genrsa -out keys/auth-private.pem 4096
+   openssl rsa -in keys/auth-private.pem -pubout -out keys/auth-public.pem
+   ```
+
+4. **Start the entire stack**
    ```bash
    make dev
    # or
@@ -218,7 +257,7 @@ dachshaus/
    - Gateway (port 4000)
    - Storefront (port 3000)
 
-4. **Access the application**
+5. **Access the application**
    - **Storefront**: http://localhost:3000
    - **GraphQL Playground**: http://localhost:4000/graphql
 
