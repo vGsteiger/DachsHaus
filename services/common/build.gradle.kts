@@ -9,7 +9,7 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-impl:0.13.0")
     implementation("io.jsonwebtoken:jjwt-jackson:0.13.0")
     implementation("org.springframework.kafka:spring-kafka:3.1.0")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.16.0")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.1")
     implementation("jakarta.servlet:jakarta.servlet-api:6.1.0")
 }
 
