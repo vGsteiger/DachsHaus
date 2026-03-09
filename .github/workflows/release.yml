@@ -136,15 +136,19 @@ jobs:
           fi
 
           # Add contributors section if there are multiple authors
-          CONTRIBUTORS=$(git log ${LATEST_TAG}..HEAD --format='%an' | sort -u || git log HEAD --format='%an' | sort -u)
+          if [ "$LATEST_TAG" = "v0.0.0" ]; then
+            CONTRIBUTORS=$(git log HEAD --format='%an' | sort -u)
+          else
+            CONTRIBUTORS=$(git log ${LATEST_TAG}..HEAD --format='%an' | sort -u)
+          fi
           CONTRIBUTOR_COUNT=$(echo "$CONTRIBUTORS" | wc -l)
 
           if [ "$CONTRIBUTOR_COUNT" -gt 1 ]; then
             RELEASE_NOTES+="### 👥 Contributors"$'\n\n'
             RELEASE_NOTES+="Thanks to all contributors:"$'\n'
-            echo "$CONTRIBUTORS" | while read -r contributor; do
+            while IFS= read -r contributor; do
               RELEASE_NOTES+="- $contributor"$'\n'
-            done
+            done <<< "$CONTRIBUTORS"
             RELEASE_NOTES+=$'\n'
           fi
 

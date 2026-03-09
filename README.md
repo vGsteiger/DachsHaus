@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # DachsHaus 🦡🏠
 
 > A polyglot microservices e-commerce platform demonstrating modern cloud-native architectures, GraphQL federation, event-driven patterns, and production-grade security practices.
@@ -521,6 +522,10 @@ Built with:
 - [Apache Kafka](https://kafka.apache.org/)
 - [Kubernetes](https://kubernetes.io/)
 - [Terraform](https://www.terraform.io/)
+
+## 📋 Release Process
+
+For details on the release process and semantic versioning conventions, see [.github/RELEASE.md](.github/RELEASE.md).
 
 ---
 
