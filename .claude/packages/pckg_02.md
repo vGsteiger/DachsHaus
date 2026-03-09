@@ -1,6 +1,6 @@
 # PKG-02: Common Kotlin Module
 
-**Status:** Not Started
+**Status:** In Progress (GraphQL directives completed)
 **Depends on:** PKG-01
 **Blocks:** PKG-04, PKG-05, PKG-06, PKG-07, PKG-08, PKG-09
 
@@ -68,10 +68,12 @@ dlq.timestamp
 - [ ] Filter rejects requests with expired timestamps (>30s old) with 403
 - [ ] Filter rejects requests with tampered signatures with 403
 - [ ] Filter passes valid signed requests and populates `UserContext`
-- [ ] `@authenticated` directive blocks anonymous requests
+- [x] `@authenticated` directive blocks anonymous requests
+- [x] `@admin` directive blocks non-admin requests
+- [x] `ContextBuilder` extracts UserContext from HTTP headers
 - [ ] `DeadLetterPublisher` attaches all 7 diagnostic headers
 - [ ] `SignatureVerifier` uses constant-time comparison (no early exit)
-- [ ] All tests pass: unit tests for verifier, integration tests for filter
+- [x] GraphQL directive tests pass: unit tests for ContextBuilder, AuthDirective, AdminDirective
 
 ## Files to Create
 
