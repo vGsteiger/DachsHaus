@@ -1,8 +1,9 @@
 # PKG-03: Federation Gateway
 
-**Status:** Not Started
-**Depends on:** PKG-01
-**Consumes (runtime):** Auth Service `/auth/verify` endpoint (PKG-04)
+**Status:** 60% Complete (Files exist, business logic missing)
+**Depends on:** PKG-01 ✅
+**Consumes (runtime):** Auth Service `/auth/verify` endpoint (PKG-04) ⚠️ **BLOCKS RUNTIME**
+**Last Verified:** 2026-03-17
 
 ## Goal
 
@@ -56,14 +57,56 @@ Login, Register, RefreshToken, IntrospectionQuery
 
 ## Acceptance Criteria
 
-- [ ] Gateway starts and composes supergraph from running subgraphs
-- [ ] Unauthenticated request to public operation → signed and forwarded as anonymous
-- [ ] Unauthenticated request to protected operation → 401 returned to client
-- [ ] Authenticated request with valid token → Auth Service verify called, signed, forwarded with user context
-- [ ] Authenticated request with invalid token → falls back to anonymous, gated by allowlist
-- [ ] Cache hit: same token within 10s does not call Auth Service again
-- [ ] `/healthz` returns 200
-- [ ] All headers (signature, user-id, roles, request-id) present on forwarded requests
+- [ ] Gateway starts and composes supergraph from running subgraphs ⚠️ **NOT IMPLEMENTED**
+- [ ] Unauthenticated request to public operation → signed and forwarded as anonymous ⚠️ **NOT IMPLEMENTED**
+- [ ] Unauthenticated request to protected operation → 401 returned to client ⚠️ **NOT IMPLEMENTED**
+- [ ] Authenticated request with valid token → Auth Service verify called, signed, forwarded with user context ⚠️ **NOT IMPLEMENTED**
+- [ ] Authenticated request with invalid token → falls back to anonymous, gated by allowlist ⚠️ **NOT IMPLEMENTED**
+- [ ] Cache hit: same token within 10s does not call Auth Service again ⚠️ **NOT IMPLEMENTED**
+- [ ] `/healthz` returns 200 ✅ **IMPLEMENTED**
+- [ ] All headers (signature, user-id, roles, request-id) present on forwarded requests ⚠️ **NOT IMPLEMENTED**
+
+## Current Implementation Status
+
+### ✅ Infrastructure Complete (40%)
+- **main.ts**: Entry point exists
+- **app.module.ts**: Minimal module imports
+- **gateway.module.ts**: Present
+- **gateway.config.ts**: Present
+- **health.controller.ts**: Returns 200 OK ✅
+- **health.module.ts**: Present
+- **public-operations.ts**: List of public operations defined
+- **tracing.plugin.ts**: Present
+
+### ⚠️ Security Layer Stubbed (20%)
+- **gate.middleware.ts**: **EMPTY** - just calls `next()`, no auth logic
+- **auth-verify.service.ts**: **STUB** - async verify() returns null, no cache, no HTTP call
+- **request-signer.ts**: **BASIC** - has HMAC-SHA256 logic but untested
+- **operation-parser.ts**: Present
+- **security.module.ts**: Present
+
+### ❌ Tests Missing (0%)
+- **auth-verify.service.spec.ts**: Empty test file
+- **gate.middleware.spec.ts**: Present but needs implementation
+- **request-signer.spec.ts**: "should be defined" placeholder only
+- **gateway.e2e-spec.ts**: ❌ **MISSING ENTIRELY**
+
+## Remaining Work
+1. Implement full auth flow in GateMiddleware:
+   - Extract Authorization header
+   - Call AuthVerifyService
+   - Check operation allowlist
+   - Gate protected operations
+   - Sign request with HMAC
+   - Forward with security headers
+2. Implement AuthVerifyService:
+   - HTTP client to Auth Service /auth/verify
+   - 10-second LRU cache
+   - Error handling
+3. Configure Apollo Gateway with IntrospectAndCompose
+4. Write all 4 test suites (3 unit + 1 e2e)
+5. Test RequestSigner HMAC logic
+6. Implement tracing plugin GCP integration
 
 ## Files to Create
 
