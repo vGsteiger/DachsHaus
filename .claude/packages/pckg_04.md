@@ -1,7 +1,9 @@
 # PKG-04: Auth Service
 
-**Status:** Not Started
-**Depends on:** PKG-01, PKG-02
+**Status:** 15% Complete (Bootstrap + migrations exist, zero business logic)
+**Depends on:** PKG-01 ✅, PKG-02 (85% complete)
+**Last Verified:** 2026-03-17
+**CRITICAL PATH**: This package blocks PKG-03 (Gateway), PKG-07 (Customer), and PKG-09 (Streams)
 
 ## Goal
 
@@ -63,16 +65,76 @@ query authStatus: AuthStatus!
 
 ## Acceptance Criteria
 
-- [ ] `POST /auth/verify` returns valid result for a fresh JWT in <5ms
-- [ ] `POST /auth/verify` returns `{ valid: false, reason: "revoked" }` after revocation
-- [ ] `register` creates credential, hashes password with BCrypt(12), publishes `user.registered`
-- [ ] `login` returns 429 after 5 failed attempts within 15 minutes (per-email throttle)
-- [ ] `refreshToken` rotates: old token revoked, new pair issued
-- [ ] `logout` revokes all refresh tokens for user, publishes revocation event
-- [ ] Revocation cache syncs across instances via Kafka consumer
-- [ ] JWKS endpoint returns valid RSA public key in JWK format
-- [ ] Flyway migrations run cleanly on empty database
-- [ ] All tests pass: unit (TokenService, AuthService, Throttle), integration (VerifyController)
+- [ ] `POST /auth/verify` returns valid result for a fresh JWT in <5ms ⚠️ **STUB ONLY**
+- [ ] `POST /auth/verify` returns `{ valid: false, reason: "revoked" }` after revocation ⚠️ **NOT IMPLEMENTED**
+- [ ] `register` creates credential, hashes password with BCrypt(12), publishes `user.registered` ⚠️ **NOT IMPLEMENTED**
+- [ ] `login` returns 429 after 5 failed attempts within 15 minutes (per-email throttle) ⚠️ **NOT IMPLEMENTED**
+- [ ] `refreshToken` rotates: old token revoked, new pair issued ⚠️ **NOT IMPLEMENTED**
+- [ ] `logout` revokes all refresh tokens for user, publishes revocation event ⚠️ **NOT IMPLEMENTED**
+- [ ] Revocation cache syncs across instances via Kafka consumer ⚠️ **NOT IMPLEMENTED**
+- [ ] JWKS endpoint returns valid RSA public key in JWK format ⚠️ **STUB - returns empty array**
+- [ ] Flyway migrations run cleanly on empty database ✅ **IMPLEMENTED**
+- [ ] All tests pass: unit (TokenService, AuthService, Throttle), integration (VerifyController) ❌ **NO TESTS EXIST**
+
+## Current Implementation Status
+
+### ✅ Bootstrap & Migrations (15%)
+- **AuthApplication.kt**: Spring Boot main class ✅
+- **V1__create_credentials.sql**: Full table definition ✅
+- **V2__create_refresh_tokens.sql**: Full table definition ✅
+- **V3__create_revocations.sql**: Full table definition ✅
+
+### ⚠️ Configuration (Empty)
+- **JwtConfig.kt**: Empty @Configuration class (needs RSA keys, TTLs)
+- **DatabaseConfig.kt**: Empty @Configuration class
+- **SecurityConfig.kt**: Present
+
+### ⚠️ REST Endpoints (Stubs Only)
+- **HealthController.kt**: Returns `{status: "UP"}` ✅
+- **VerifyController.kt**: Returns `{status: "ok"}` stub, **NO JWT VERIFICATION**
+- **JwksController.kt**: Returns empty keys array `{keys: []}`, **NO RSA PUBLIC KEY**
+
+### ⚠️ GraphQL (Stub Only)
+- **AuthResolver.kt**: Only `login()` mutation returning empty token string
+- **schema.graphqls**: Exists
+
+### ✅ Domain Models (Defined)
+- **Credential.kt**: Data class defined (id, email, passwordHash, roles) ✅
+
+### ⚠️ Domain Services (Empty)
+- **AuthService.kt**: Skeleton with comment placeholders only
+
+### ⚠️ Kafka (Stub)
+- **AuthEventProducer.kt**: Skeleton with comment placeholders
+
+### ❌ Missing Entirely (27/37 files)
+- TokenService (RSA key loading, JWT issue/verify, JWKS)
+- RevocationService (cache + Kafka sync)
+- LoginThrottleService (rate limiting)
+- CredentialRepository, RefreshTokenRepository, RevocationRepository
+- Entity classes (CredentialEntity, RefreshTokenEntity)
+- Mappers (CredentialMapper)
+- GraphQL mutations: register, refreshToken, logout, authStatus
+- All test files (0 tests found)
+
+## Remaining Work
+1. **TokenService**: Generate RSA key pair, implement JWT issuance (RS256, 15min/7day TTL), implement verification, generate JWKS
+2. **AuthService**: Implement register (BCrypt(12)), login (verify + issue tokens), refresh (rotate), revoke (logout)
+3. **RevocationService**: In-memory ConcurrentHashMap cache, warm from DB on startup, Kafka consumer for sync
+4. **LoginThrottleService**: 5 attempts/15min per email, 10 consecutive → 30min lockout
+5. **Repositories**: JPA repositories for Credential, RefreshToken, Revocation
+6. **Entity Classes**: JPA entities + mappers
+7. **REST Endpoints**: Implement /auth/verify logic (JWT verify + revocation check)
+8. **GraphQL Mutations**: Implement all 4 mutations (register, refreshToken, logout, authStatus)
+9. **Kafka Producer**: Publish user.registered and revocations events
+10. **Tests**: Unit tests (TokenService, AuthService, LoginThrottle), integration tests (VerifyController)
+11. **RSA Keys**: Generate key pair and store in resources/keys/
+
+## Critical Dependencies
+- **Blocks PKG-03**: Gateway needs /auth/verify endpoint to authenticate requests
+- **Blocks PKG-07**: Customer Service consumes user.registered events
+- **Blocks PKG-09**: Streams consumes revocations events
+- **Blocks ALL**: Without JWT tokens, no user operations work
 
 ## Files to Create
 

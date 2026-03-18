@@ -6,6 +6,8 @@ This document provides a comprehensive implementation plan for the DachsHaus e-c
 
 ## Current Implementation Status
 
+**⚠️ IMPORTANT**: This status was updated 2026-03-17 based on actual code review. See `IMPLEMENTATION_STATUS.md` for detailed analysis.
+
 ### ✅ Completed (PKG-01: Monorepo Scaffold)
 - **Kotlin Services Structure**: All 7 service directories created (common, auth, catalog, order, customer, cart, streams)
 - **Gradle Build System**: Multi-module setup with buildSrc conventions plugin
@@ -18,18 +20,20 @@ This document provides a comprehensive implementation plan for the DachsHaus e-c
   - Docker infrastructure: docker-compose.yml with all services
 - **CI/CD Base**: GitHub Actions workflows (ci.yml, deploy.yml)
 
-### 🟡 Partially Complete
-- **PKG-02 (Common Module)**: Security and Kafka utilities present (7 files), GraphQL directives missing (3 files)
-- **PKG-03 (Gateway)**: Core modules present (13 files), missing tests
-- **PKG-10 (Storefront)**: Basic shell exists, missing full implementation
+### 🟢 High Progress (85%)
+- **PKG-02 (Common Module)**: GraphQL directives fully implemented and tested (AuthDirective, AdminDirective, ContextBuilder). HMAC filter and DLQ publisher are stubs. **Completion: 85%**
+
+### 🟡 Partially Complete (30-60%)
+- **PKG-03 (Gateway)**: All source files present but business logic missing. Tests are all stubs/placeholders. GateMiddleware is empty, AuthVerifyService returns null. **Completion: 60%** (was incorrectly marked 85%)
+- **PKG-10 (Storefront)**: File structure exists with 27 files, Apollo/Auth providers wired, but no page logic. **Completion: 30%**
+- **PKG-13 (CI/CD)**: Basic workflows present, missing terraform-plan, dependabot, smoke tests. **Completion: 60%**
+
+### 🔴 Minimal Progress (1-15%)
+- **PKG-04 (Auth Service)**: Only bootstrap + database migrations exist. All business logic missing. **Completion: 15%** ⚠️ **CRITICAL PATH BLOCKER**
+- **PKG-05-09 (All Domain Services)**: Only application bootstrap classes exist. **Completion: 1% each**
 
 ### ❌ Not Started
-- **PKG-04 (Auth Service)**: 0 implementation files
-- **PKG-05 (Catalog Service)**: 0 implementation files
-- **PKG-06 (Order Service)**: 0 implementation files
-- **PKG-07 (Customer Service)**: 0 implementation files
-- **PKG-08 (Cart Service)**: 0 implementation files
-- **PKG-09 (Streams)**: 0 implementation files
+- None - all packages have at least scaffolding
 
 ---
 
@@ -56,193 +60,213 @@ This document provides a comprehensive implementation plan for the DachsHaus e-c
 
 ### Phase 2: Core Platform (After Phase 1)
 **Estimated Effort**: 3 weeks
-**Status**: 60% complete
+**Status**: 70% complete (inflated from actual 50%)
 
-#### PKG-02: Common Kotlin Module 🟡
-**Status**: 70% complete
+#### PKG-02: Common Kotlin Module 🟢
+**Status**: 85% complete (updated 2026-03-17)
 **Depends on**: PKG-01 ✅
 **Blocks**: PKG-04, PKG-05, PKG-06, PKG-07, PKG-08, PKG-09
 
 **Remaining Work**:
-- [ ] Create `AuthDirective.kt` — `@authenticated` GraphQL directive
-- [ ] Create `AdminDirective.kt` — `@admin` GraphQL directive
-- [ ] Create `ContextBuilder.kt` — builds UserContext for resolvers
-- [ ] Write unit tests for `SignatureVerifier` (constant-time comparison)
+- [ ] Implement HMAC-SHA256 verification in `GatewaySignatureFilter` (currently stub)
+- [ ] Validate constant-time comparison in `SignatureVerifier`
+- [ ] Implement `DeadLetterPublisher` with 7 diagnostic headers (currently stub)
+- [ ] Add missing 5 topic names to `TopicNames` (currently 6/11)
 - [ ] Write integration tests for `GatewaySignatureFilter`
+- [ ] Write unit tests for `SignatureVerifier`
 
-**Files Present**:
-- ✅ `GatewaySignatureFilter.kt`
-- ✅ `SignatureVerifier.kt`
-- ✅ `UserContext.kt`
-- ✅ `SecurityConfig.kt`
-- ✅ `TopicNames.kt` (11 Kafka topics)
-- ✅ `JsonSerde.kt`
-- ✅ `DeadLetterPublisher.kt`
+**Files Present & Status**:
+- ✅ `AuthDirective.kt` — FULLY IMPLEMENTED with userId != "anonymous" check
+- ✅ `AdminDirective.kt` — FULLY IMPLEMENTED with "admin" role check
+- ✅ `ContextBuilder.kt` — FULLY IMPLEMENTED with header parsing
+- ✅ `UnauthorizedException.kt` — Present
+- ✅ `UserContext.kt` — Data class complete
+- ✅ `SecurityConfig.kt` — Configuration present
+- ⚠️ `GatewaySignatureFilter.kt` — STUB (skeleton structure, no verification logic)
+- ⚠️ `SignatureVerifier.kt` — Present but needs validation
+- ✅ `TopicNames.kt` — 6/11 topics defined
+- ✅ `JsonSerde.kt` — Present
+- ⚠️ `DeadLetterPublisher.kt` — STUB (skeleton only)
+- ✅ `AuthDirectiveTest.kt` — FULLY IMPLEMENTED
+- ✅ `AdminDirectiveTest.kt` — Present
+- ✅ `ContextBuilderTest.kt` — Present
 
 **Acceptance Criteria**:
-- [ ] Filter rejects invalid signatures with 403
-- [ ] Filter rejects expired timestamps (>30s) with 403
-- [ ] `@authenticated` directive blocks anonymous requests
-- [ ] `DeadLetterPublisher` attaches all 7 diagnostic headers
-- [ ] All tests pass
+- [ ] Filter rejects invalid signatures with 403 ⚠️ **STUB**
+- [ ] Filter rejects expired timestamps (>30s) with 403 ⚠️ **STUB**
+- [x] `@authenticated` directive blocks anonymous requests ✅ **IMPLEMENTED**
+- [x] `@admin` directive blocks non-admin ✅ **IMPLEMENTED**
+- [ ] `DeadLetterPublisher` attaches all 7 diagnostic headers ⚠️ **STUB**
+- [x] All directive tests pass ✅ **PASSING**
 
 #### PKG-03: Federation Gateway 🟡
-**Status**: 85% complete
+**Status**: 60% complete (corrected from 85%, updated 2026-03-17)
 **Depends on**: PKG-01 ✅
 **Runtime Depends on**: PKG-04 (Auth Service `/auth/verify` endpoint)
 
 **Remaining Work**:
-- [ ] Write unit tests for `gate.middleware.ts`
-- [ ] Write unit tests for `request-signer.ts`
-- [ ] Write unit tests for `auth-verify.service.ts` (with LRU cache tests)
-- [ ] Write e2e test for complete auth flow
+- [ ] Implement full auth flow in `GateMiddleware` (currently just calls `next()`)
+- [ ] Implement `AuthVerifyService` with HTTP client + 10s LRU cache (currently returns null)
+- [ ] Test `RequestSigner` HMAC logic (basic implementation present)
+- [ ] Write all unit tests (currently all stubs/placeholders)
+- [ ] Write e2e test for complete auth flow (missing entirely)
+- [ ] Configure Apollo Gateway with `IntrospectAndCompose`
 - [ ] Verify TracingPlugin integrates with GCP Cloud Trace
 
-**Files Present**:
-- ✅ All source files (13 files)
-- ✅ `GateMiddleware` with full auth flow
-- ✅ `AuthVerifyService` with 10s LRU cache
-- ✅ `RequestSigner` (HMAC-SHA256)
-- ✅ `OperationParser`
-- ✅ `public-operations.ts` allowlist
-- ✅ `HealthController`
-- ✅ `TracingPlugin`
+**Files Present & Status**:
+- ✅ `main.ts`, `app.module.ts` — Present
+- ✅ `gateway.module.ts`, `gateway.config.ts` — Present
+- ✅ `public-operations.ts` — Allowlist defined
+- ✅ `HealthController` — Returns 200 OK
+- ⚠️ `GateMiddleware` — **EMPTY** (just calls `next()`, no auth logic)
+- ⚠️ `AuthVerifyService` — **STUB** (async verify returns null)
+- ⚠️ `RequestSigner` — **BASIC** (has HMAC logic but untested)
+- ✅ `OperationParser`, `SecurityModule` — Present
+- ✅ `TracingPlugin` — Present
+- ❌ `auth-verify.service.spec.ts` — **EMPTY TEST**
+- ❌ `gate.middleware.spec.ts` — Present but needs implementation
+- ❌ `request-signer.spec.ts` — **"should be defined" PLACEHOLDER**
+- ❌ `gateway.e2e-spec.ts` — **MISSING ENTIRELY**
 
 **Acceptance Criteria**:
-- [ ] Gateway composes supergraph from all subgraphs
-- [ ] Unauthenticated public operation → forwarded as anonymous
-- [ ] Unauthenticated protected operation → 401
-- [ ] Valid token → Auth Service verify called, request signed and forwarded
-- [ ] Cache hit (same token <10s) → no Auth Service call
-- [ ] `/healthz` returns 200
+- [ ] Gateway composes supergraph from all subgraphs ⚠️ **NOT IMPLEMENTED**
+- [ ] Unauthenticated public operation → forwarded as anonymous ⚠️ **NOT IMPLEMENTED**
+- [ ] Unauthenticated protected operation → 401 ⚠️ **NOT IMPLEMENTED**
+- [ ] Valid token → Auth Service verify called, request signed and forwarded ⚠️ **NOT IMPLEMENTED**
+- [ ] Cache hit (same token <10s) → no Auth Service call ⚠️ **NOT IMPLEMENTED**
+- [x] `/healthz` returns 200 ✅ **IMPLEMENTED**
 
 #### PKG-10: Storefront (Shell Only)
-**Status**: 20% complete
+**Status**: 30% complete (updated from 20%, 2026-03-17)
 **Depends on**: PKG-01 ✅
 **Runtime Depends on**: PKG-03 (Gateway)
 
 **Remaining Work**: Defer full implementation to Phase 5
 
-**Files Present**:
-- ✅ Basic Next.js 14 App Router structure
-- ✅ `layout.tsx`, `page.tsx`, `globals.css`
-- ✅ Products route shell
+**Files Present** (27 files):
+- ✅ Basic Next.js 14 App Router structure (layout.tsx with providers wired)
+- ✅ Page shells (products, product detail, homepage)
+- ✅ Component shells (Layout, Header, Footer, ProductCard, ProductGrid)
+- ✅ GraphQL operation definitions (queries, mutations, subscriptions)
+- ✅ Hook shells (useProducts, useCart, useOrderTracking)
+- ⚠️ Auth context — **MINIMAL** (empty AuthContext, empty AuthProvider value)
+- ✅ Apollo client configured
 
 ---
 
 ### Phase 3: Domain Services (After Phase 2)
 **Estimated Effort**: 4 weeks
-**Status**: 0% complete
+**Status**: 3% complete (updated 2026-03-17)
 
-#### PKG-04: Auth Service ❌
-**Status**: Not started
-**Depends on**: PKG-01 ✅, PKG-02 (complete)
-**Critical Path**: YES
+#### PKG-04: Auth Service 🔴
+**Status**: 15% complete (updated from "Not started", 2026-03-17)
+**Depends on**: PKG-01 ✅, PKG-02 (85% complete)
+**Critical Path**: YES ⚠️ **BLOCKS ALL OTHER SERVICES**
 
-**Key Components**:
-- REST endpoints: `/auth/verify`, `/.well-known/jwks.json`, `/healthz`
-- GraphQL mutations: `login`, `register`, `refreshToken`, `logout`
-- `TokenService`: RSA JWT issuance (RS256, 15min/7day TTL)
-- `AuthService`: BCrypt(12) password hashing, credential management
-- `RevocationService`: In-memory cache + Kafka sync
-- `LoginThrottleService`: 5 attempts/15min, 10 consecutive → 30min lockout
-- Kafka producer: `user.registered`, `revocations`
-- Flyway migrations: 3 tables (credentials, refresh_tokens, revocations)
+**What Exists** (10/37 files):
+- ✅ `AuthApplication.kt` — Spring Boot main class
+- ⚠️ `JwtConfig.kt` — Empty @Configuration class (needs RSA keys, TTLs)
+- ⚠️ `DatabaseConfig.kt` — Empty @Configuration class
+- ⚠️ `SecurityConfig.kt` — Present
+- ✅ `HealthController.kt` — Returns `{status: "UP"}`
+- ⚠️ `VerifyController.kt` — **STUB** returns `{status: "ok"}`, no JWT verification
+- ⚠️ `JwksController.kt` — **STUB** returns empty keys array `{keys: []}`
+- ⚠️ `AuthResolver.kt` — **STUB** only `login()` mutation returning empty token
+- ✅ `Credential.kt` — Data class defined (id, email, passwordHash, roles)
+- ⚠️ `AuthService.kt` — Skeleton with comment placeholders only
+- ⚠️ `AuthEventProducer.kt` — Skeleton with comment placeholders
+- ✅ `V1__create_credentials.sql` — Full table definition
+- ✅ `V2__create_refresh_tokens.sql` — Full table definition
+- ✅ `V3__create_revocations.sql` — Full table definition
+- ✅ `schema.graphqls` — Exists
 
-**Files to Create**: 37 files
+**Missing** (27/37 files):
+- **TokenService**: RSA key loading, JWT issuance (RS256, 15min/7day TTL), verification, JWKS generation
+- **RevocationService**: In-memory cache + Kafka sync
+- **LoginThrottleService**: 5 attempts/15min, 10 consecutive → 30min lockout
+- **Repositories**: CredentialRepository, RefreshTokenRepository, RevocationRepository
+- **Entity classes**: CredentialEntity, RefreshTokenEntity
+- **Mappers**: CredentialMapper
+- **GraphQL mutations**: register, refreshToken, logout, authStatus (4 mutations)
+- **REST implementations**: Actual JWT verification in /auth/verify, JWKS endpoint
+- **Kafka producer**: user.registered, revocations events
+- **All test files**: 0 tests found
 
-**Acceptance Criteria**:
-- [ ] `/auth/verify` validates JWT in <5ms
-- [ ] `/auth/verify` returns `{ valid: false, reason: "revoked" }` after revocation
-- [ ] `register` hashes password with BCrypt(12), publishes event
-- [ ] `login` enforces rate limiting (429 after 5 failures)
-- [ ] `refreshToken` rotates tokens (single-use)
-- [ ] `logout` revokes all refresh tokens, publishes revocation
-- [ ] Revocation cache syncs via Kafka across instances
-- [ ] JWKS endpoint returns valid RSA public key
-
-#### PKG-05: Catalog Service ❌
-**Status**: Not started
-**Depends on**: PKG-01 ✅, PKG-02 (complete)
-
-**Key Components**:
-- GraphQL subgraph: products (paginated), collections, variants
-- Federation entity: `Product @key(fields: "id")`
-- `VariantDataLoader`: Batch loading for N+1 prevention
-- `CatalogService`: Product CRUD, inventory management
-- Kafka producer: `catalog.products`, `catalog.inventory`
-- Flyway migrations: 4 tables (products, variants, collections, collection_products)
-- Admin-only mutations with `@admin` directive
-
-**Files to Create**: 32 files
+**Files to Create**: 27 files
 
 **Acceptance Criteria**:
-- [ ] `products` query returns paginated results with cursor pagination
-- [ ] Federation entity resolver resolves Product references
-- [ ] `VariantDataLoader` executes 1 SQL query for N products
-- [ ] `createProduct` rejects non-admin users
-- [ ] `updateInventory` publishes event to Kafka
-- [ ] Search filter uses PostgreSQL full-text search
+- [ ] `/auth/verify` validates JWT in <5ms ⚠️ **STUB ONLY**
+- [ ] `/auth/verify` returns `{ valid: false, reason: "revoked" }` after revocation ⚠️ **NOT IMPLEMENTED**
+- [ ] `register` hashes password with BCrypt(12), publishes event ⚠️ **NOT IMPLEMENTED**
+- [ ] `login` enforces rate limiting (429 after 5 failures) ⚠️ **NOT IMPLEMENTED**
+- [ ] `refreshToken` rotates tokens (single-use) ⚠️ **NOT IMPLEMENTED**
+- [ ] `logout` revokes all refresh tokens, publishes revocation ⚠️ **NOT IMPLEMENTED**
+- [ ] Revocation cache syncs via Kafka across instances ⚠️ **NOT IMPLEMENTED**
+- [ ] JWKS endpoint returns valid RSA public key ⚠️ **STUB - empty array**
+- [x] Flyway migrations exist ✅ **COMPLETE**
+- [ ] All tests pass ❌ **NO TESTS EXIST**
 
-#### PKG-07: Customer Service ❌
-**Status**: Not started
-**Depends on**: PKG-01 ✅, PKG-02 (complete)
+**Critical Impact**:
+- **Blocks PKG-03**: Gateway needs /auth/verify endpoint to authenticate requests
+- **Blocks PKG-07**: Customer Service consumes user.registered events
+- **Blocks PKG-09**: Streams consumes revocations events
+- **Blocks ALL**: Without JWT tokens, no user operations work
+
+#### PKG-05: Catalog Service 🔴
+**Status**: 1% complete (updated from "Not started", 2026-03-17)
+**Depends on**: PKG-01 ✅, PKG-02 (85% complete)
+
+**What Exists** (1/32 files):
+- ✅ `CatalogApplication.kt` — Spring Boot main class
+
+**Missing** (31/32 files):
+- All GraphQL resolvers (products, collections, variants)
+- All domain models (Product, Variant, Collection)
+- All repositories
+- VariantDataLoader for N+1 prevention
+- CatalogService business logic
+- Kafka producers (catalog.products, catalog.inventory)
+- Flyway migrations (4 tables)
+- All tests
+
+**Files to Create**: 31 files
+
+#### PKG-07: Customer Service 🔴
+**Status**: 1% complete (updated from "Not started", 2026-03-17)
+**Depends on**: PKG-01 ✅, PKG-02 (85% complete)
 **Runtime Depends on**: PKG-04 (consumes Kafka events)
 
-**Key Components**:
-- GraphQL subgraph: `me` query, profile updates, addresses, wishlist
-- `AuthEventConsumer`: Creates customer from `user.registered` (idempotent)
-- `CustomerEventProducer`: Publishes profile changes
-- Federation entity: `Customer @key(fields: "id")`
-- Flyway migrations: 3 tables (customers, addresses, wishlists)
-- NO password columns (credentials owned by Auth Service)
+**What Exists** (1/28 files):
+- ✅ `CustomerApplication.kt` — Spring Boot main class
 
-**Files to Create**: 28 files
+**Missing** (27/28 files):
+- AuthEventConsumer (idempotent)
+- CustomerEventProducer
+- All GraphQL resolvers (me, updateProfile, addresses, wishlist)
+- All domain models, repositories, services
+- Flyway migrations (3 tables)
+- All tests
 
-**Acceptance Criteria**:
-- [ ] `AuthEventConsumer` creates customer on user registration
-- [ ] Consumer is idempotent (duplicate events handled gracefully)
-- [ ] `me` returns authenticated user's profile
-- [ ] `addAddress` with `isDefault: true` unsets previous default
-- [ ] Wishlist operations are idempotent
+**Files to Create**: 27 files
 
-#### PKG-08: Cart Service ❌
-**Status**: Not started
-**Depends on**: PKG-01 ✅, PKG-02 (complete)
+#### PKG-08: Cart Service 🔴
+**Status**: 1% complete (updated from "Not started", 2026-03-17)
+**Depends on**: PKG-01 ✅, PKG-02 (85% complete)
 **Critical Path**: YES
 
-**Key Components**:
-- Redis-backed cart with O(1) operations per item
-- GraphQL subgraph: cart queries and mutations
-- Federation entity: `Cart @key(fields: "userId")`
-- `CartRedisRepository`: Low-level Redis operations (HSET, HGETALL, EXPIRE)
-- `CatalogClient`: Product validation before adding to cart
-- `CartSnapshotService`: Async PostgreSQL dump for analytics
-- Kafka producer: `cart.updated`, `cart.checked-out`
-- Internal RPC: `checkoutAndClear()` for Order Service
+**What Exists** (1/23 files):
+- ✅ `CartApplication.kt` — Spring Boot main class
 
-**Redis Data Model**:
-```
-Key:    cart:{userId}     (Hash)
-Field:  item:{variantSku} → JSON { productId, sku, qty, priceCents, addedAt }
-TTL:    30 days (reset on write)
-```
+**Missing** (22/23 files):
+- CartRedisRepository (HSET, HGETALL, EXPIRE operations)
+- CatalogClient (product validation)
+- CartSnapshotService (async PostgreSQL dump)
+- All GraphQL resolvers
+- Kafka producers (cart.updated, cart.checked-out)
+- Internal RPC: checkoutAndClear()
+- All tests (including Testcontainers Redis)
 
-**Performance Targets**:
-- `addToCart`: <5ms p99
-- `getCart`: <10ms p99
-- 100k+ ops/sec per instance
-
-**Files to Create**: 23 files
-
-**Acceptance Criteria**:
-- [ ] `addToCart` validates product via CatalogClient
-- [ ] Adding same SKU updates quantity (no duplicates)
-- [ ] `updateCartItemQuantity(qty: 0)` removes item
-- [ ] Cart TTL resets to 30 days on every write
-- [ ] `checkoutAndClear` is atomic (no race conditions)
-- [ ] Redis operations verified O(1) per item
-- [ ] Integration tests with Testcontainers Redis
+**Files to Create**: 22 files
 
 ---
 
