@@ -25,7 +25,7 @@
   "devDependencies": {
     "@dachshaus/tsconfig": "workspace:*",
     "@dachshaus/eslint-config": "workspace:*",
-    "@nestjs/cli": "^10.0.0",
+    "@nestjs/cli": "^11.0.16",
     "@nestjs/testing": "^11.1.17",
     "@types/jest": "^30.0.0",
     "@types/express": "^4.17.0",
