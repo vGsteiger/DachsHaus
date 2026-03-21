@@ -37,3 +37,7 @@ tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
 tasks.named<Jar>("jar") {
     enabled = true
 }
+
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
