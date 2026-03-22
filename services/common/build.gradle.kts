@@ -26,7 +26,7 @@ dependencies {
     // Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.graphql:spring-graphql-test")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:6.3.0")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
 }
 
