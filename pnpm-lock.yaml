@@ -119,8 +119,8 @@ importers:
         specifier: ^6.2.1
         version: 6.2.1(graphql@16.13.0)
       '@graphql-codegen/typescript':
-        specifier: ^4.0.0
-        version: 4.1.6(graphql@16.13.0)
+        specifier: ^5.0.9
+        version: 5.0.9(graphql@16.13.0)
       '@graphql-codegen/typescript-operations':
         specifier: ^4.0.0
         version: 4.6.1(graphql@16.13.0)
@@ -616,7 +616,7 @@ packages:
       '@babel/core': 7.29.0
       '@babel/generator': 7.29.1
       '@babel/parser': 7.29.2
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.2
       '@babel/traverse': 7.29.0
       '@babel/types': 7.29.0
       babel-preset-fbjs: 3.4.0(@babel/core@7.29.0)
@@ -636,33 +636,12 @@ packages:
       - supports-color
     dev: true
 
-  /@ardatan/relay-compiler@12.3.0(graphql@16.13.0):
-    resolution: {integrity: sha512-lc6PyM1IQCSa87DMChfv61HuhrSquHGhsF+WFSm2csFnKMSHaj0S1M8fnGr04i7O9YnwyR+OcgQ3CfzlEPC9Fg==}
-    hasBin: true
-    peerDependencies:
-      graphql: '*'
-    dependencies:
-      '@babel/generator': 7.29.1
-      '@babel/parser': 7.29.2
-      '@babel/runtime': 7.28.6
-      chalk: 4.1.2
-      fb-watchman: 2.0.2
-      graphql: 16.13.0
-      immutable: 5.1.5
-      invariant: 2.2.4
-      nullthrows: 1.1.1
-      relay-runtime: 12.0.0
-      signedsource: 1.0.0
-    transitivePeerDependencies:
-      - encoding
-    dev: true
-
   /@ardatan/relay-compiler@13.0.0(graphql@16.13.0):
     resolution: {integrity: sha512-ite4+xng5McO8MflWCi0un0YmnorTujsDnfPfhzYzAgoJ+jkI1pZj6jtmTl8Jptyi1H+Pa0zlatJIsxDD++ETA==}
     peerDependencies:
       graphql: '*'
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.2
       graphql: 16.13.0
       immutable: 5.1.5
       invariant: 2.2.4
@@ -1663,8 +1642,6 @@ packages:
       auto-bind: 4.0.0
       graphql: 16.13.0
       tslib: 2.6.3
-    transitivePeerDependencies:
-      - encoding
     dev: true
 
   /@graphql-codegen/typescript-operations@5.0.9(graphql@16.13.0):
@@ -1714,8 +1691,6 @@ packages:
       auto-bind: 4.0.0
       graphql: 16.13.0
       tslib: 2.6.3
-    transitivePeerDependencies:
-      - encoding
     dev: true
 
   /@graphql-codegen/typescript@5.0.9(graphql@16.13.0):
@@ -1761,7 +1736,7 @@ packages:
     dependencies:
       '@graphql-codegen/plugin-helpers': 5.1.1(graphql@16.13.0)
       '@graphql-tools/optimize': 2.0.0(graphql@16.13.0)
-      '@graphql-tools/relay-operation-optimizer': 7.0.27(graphql@16.13.0)
+      '@graphql-tools/relay-operation-optimizer': 7.1.1(graphql@16.13.0)
       '@graphql-tools/utils': 10.11.0(graphql@16.13.0)
       auto-bind: 4.0.0
       change-case-all: 1.0.15
@@ -1770,8 +1745,6 @@ packages:
       graphql-tag: 2.12.6(graphql@16.13.0)
       parse-filepath: 1.0.2
       tslib: 2.6.3
-    transitivePeerDependencies:
-      - encoding
     dev: true
 
   /@graphql-codegen/visitor-plugin-common@6.2.4(graphql@16.13.0):
@@ -2109,20 +2082,6 @@ packages:
     transitivePeerDependencies:
       - encoding
       - supports-color
-    dev: true
-
-  /@graphql-tools/relay-operation-optimizer@7.0.27(graphql@16.13.0):
-    resolution: {integrity: sha512-rdkL1iDMFaGDiHWd7Bwv7hbhrhnljkJaD0MXeqdwQlZVgVdUDlMot2WuF7CEKVgijpH6eSC6AxXMDeqVgSBS2g==}
-    engines: {node: '>=16.0.0'}
-    peerDependencies:
-      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
-    dependencies:
-      '@ardatan/relay-compiler': 12.3.0(graphql@16.13.0)
-      '@graphql-tools/utils': 11.0.0(graphql@16.13.0)
-      graphql: 16.13.0
-      tslib: 2.8.1
-    transitivePeerDependencies:
-      - encoding
     dev: true
 
   /@graphql-tools/relay-operation-optimizer@7.1.1(graphql@16.13.0):
@@ -9507,7 +9466,7 @@ packages:
   /relay-runtime@12.0.0:
     resolution: {integrity: sha512-QU6JKr1tMsry22DXNy9Whsq5rmvwr3LSZiiWV/9+DFpuTWvp+WFhobWMc8TC4OjKFfNhEZy7mOiqUAn5atQtug==}
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.2
       fbjs: 3.0.5
       invariant: 2.2.4
     transitivePeerDependencies:
