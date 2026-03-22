@@ -7,5 +7,5 @@ dependencies {
     implementation(project(":common"))
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.postgresql:postgresql:42.7.10")
-    implementation("org.flywaydb:flyway-core:10.0.0")
+    implementation("org.flywaydb:flyway-core:12.1.1")
 }
