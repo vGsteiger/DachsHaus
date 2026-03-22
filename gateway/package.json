@@ -21,7 +21,7 @@
     "graphql": "^16.8.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.0",
-    "uuid": "^11.0.3"
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@dachshaus/tsconfig": "workspace:*",
