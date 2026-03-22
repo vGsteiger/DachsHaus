@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # DachsHaus 🦡🏠
 
 > A polyglot microservices e-commerce platform demonstrating modern cloud-native architectures, GraphQL federation, event-driven patterns, and production-grade security practices.
