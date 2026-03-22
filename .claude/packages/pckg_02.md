@@ -1,9 +1,9 @@
 # PKG-02: Common Kotlin Module
 
-**Status:** 85% Complete (GraphQL directives fully implemented, HMAC filter stubbed)
+**Status:** 100% Complete ✅
 **Depends on:** PKG-01 ✅
 **Blocks:** PKG-04, PKG-05, PKG-06, PKG-07, PKG-08, PKG-09
-**Last Verified:** 2026-03-17
+**Last Verified:** 2026-03-22
 
 ## Goal
 
@@ -65,41 +65,36 @@ dlq.timestamp
 
 ## Acceptance Criteria
 
-- [ ] Filter rejects requests without `X-Gateway-Signature` with 403 ⚠️ **STUB**
-- [ ] Filter rejects requests with expired timestamps (>30s old) with 403 ⚠️ **STUB**
-- [ ] Filter rejects requests with tampered signatures with 403 ⚠️ **STUB**
-- [ ] Filter passes valid signed requests and populates `UserContext` ⚠️ **STUB**
-- [x] `@authenticated` directive blocks anonymous requests ✅ **IMPLEMENTED**
-- [x] `@admin` directive blocks non-admin requests ✅ **IMPLEMENTED**
-- [x] `ContextBuilder` extracts UserContext from HTTP headers ✅ **IMPLEMENTED**
-- [ ] `DeadLetterPublisher` attaches all 7 diagnostic headers ⚠️ **STUB**
-- [ ] `SignatureVerifier` uses constant-time comparison (no early exit) ⚠️ **NEEDS VERIFICATION**
-- [x] GraphQL directive tests pass: unit tests for ContextBuilder, AuthDirective, AdminDirective ✅ **PASSING**
+- [x] Filter rejects requests without `X-Gateway-Signature` with 403 ✅
+- [x] Filter rejects requests with expired timestamps (>30s old) with 403 ✅
+- [x] Filter rejects requests with tampered signatures with 403 ✅
+- [x] Filter passes valid signed requests and populates `UserContext` ✅
+- [x] `@authenticated` directive blocks anonymous requests ✅
+- [x] `@admin` directive blocks non-admin requests ✅
+- [x] `ContextBuilder` extracts UserContext from HTTP headers ✅
+- [x] `DeadLetterPublisher` attaches all 7 diagnostic headers ✅
+- [x] `SignatureVerifier` uses constant-time comparison (no early exit) ✅
+- [x] GraphQL directive tests pass: unit tests for ContextBuilder, AuthDirective, AdminDirective ✅
+- [x] GatewaySignatureFilter unit tests (11 test cases) ✅
+- [x] SignatureVerifier unit tests (10 test cases) ✅
 
 ## Current Implementation Status
 
-### ✅ Completed (85%)
-- **AuthDirective.kt**: Fully implemented with userId != "anonymous" check, throws UnauthorizedException
-- **AdminDirective.kt**: Fully implemented with "admin" role check, throws UnauthorizedException
-- **ContextBuilder.kt**: Fully implemented with header parsing (X-User-Id, X-User-Roles, X-Request-Id)
+### ✅ All Complete (100%)
+- **GatewaySignatureFilter.kt**: Full HMAC-SHA256 verification — missing header, bad format, expired timestamp, and invalid signature all return 403
+- **SignatureVerifier.kt**: Constant-time XOR comparison via `MessageDigest`-style approach; `computeHmac` returns 64-char hex string
+- **DeadLetterPublisher.kt**: Publishes to DLQ with all 7 diagnostic headers (source.topic, source.partition, source.offset, source.service, error.class, error.message, timestamp)
+- **TopicNames.kt**: All 11 topic constants defined (auth ×2, catalog ×2, order ×2, customer ×1, cart ×2, notifications ×1, DLQ)
+- **AuthDirective.kt**: Rejects userId == "anonymous", throws UnauthorizedException
+- **AdminDirective.kt**: Requires "admin" in roles, throws UnauthorizedException
+- **ContextBuilder.kt**: Header parsing (X-User-Id, X-User-Roles, X-Request-Id)
 - **UserContext.kt**: Data class complete
 - **SecurityConfig.kt**: Configuration present
-- **TopicNames.kt**: 6 topics defined (needs 5 more per spec)
 - **JsonSerde.kt**: Present
-- **Tests**: AuthDirectiveTest, AdminDirectiveTest, ContextBuilderTest all implemented and passing
-
-### ⚠️ Stubbed/Incomplete (15%)
-- **GatewaySignatureFilter.kt**: Skeleton structure exists, NO HMAC verification logic
-- **SignatureVerifier.kt**: Present but needs constant-time comparison validation
-- **DeadLetterPublisher.kt**: Skeleton only, NO implementation
+- **Tests**: All test files present and passing
 
 ## Remaining Work
-1. Implement HMAC-SHA256 verification in GatewaySignatureFilter
-2. Validate constant-time comparison in SignatureVerifier
-3. Implement DeadLetterPublisher with 7 diagnostic headers
-4. Add missing 5 topic names to TopicNames
-5. Write integration tests for GatewaySignatureFilter
-6. Write unit tests for SignatureVerifier
+None.
 
 ## Files to Create
 

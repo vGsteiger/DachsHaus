@@ -1,6 +1,7 @@
 package com.dachshaus.common.graphql
 
 import graphql.schema.DataFetcherFactories
+import graphql.schema.FieldCoordinates
 import graphql.schema.GraphQLFieldDefinition
 import graphql.schema.idl.SchemaDirectiveWiring
 import graphql.schema.idl.SchemaDirectiveWiringEnvironment
@@ -34,8 +35,11 @@ class AuthDirective(
 
     override fun onField(environment: SchemaDirectiveWiringEnvironment<GraphQLFieldDefinition>): GraphQLFieldDefinition {
         val field = environment.element
+        val parentTypeName = environment.fieldsContainer.name
+        val coordinates = FieldCoordinates.coordinates(parentTypeName, field.name)
+
         val originalDataFetcher = environment.codeRegistry.getDataFetcher(
-            environment.fieldsContainer,
+            coordinates,
             field
         )
 
@@ -61,8 +65,7 @@ class AuthDirective(
 
         // Update the code registry with the wrapped data fetcher
         environment.codeRegistry.dataFetcher(
-            environment.fieldsContainer,
-            field,
+            coordinates,
             authDataFetcher
         )
 
