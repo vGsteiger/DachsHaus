@@ -103,8 +103,8 @@ importers:
         specifier: ^10.0.3
         version: 10.0.3
       eslint-config-prettier:
-        specifier: ^9.0.0
-        version: 9.1.2(eslint@10.0.3)
+        specifier: ^10.1.8
+        version: 10.1.8(eslint@10.0.3)
       eslint-plugin-import:
         specifier: ^2.28.0
         version: 2.32.0(@typescript-eslint/parser@8.57.1)(eslint-import-resolver-typescript@3.10.1)(eslint@10.0.3)
@@ -197,8 +197,8 @@ importers:
         specifier: ^8.5.8
         version: 8.5.8
       tailwindcss:
-        specifier: ^4.2.1
-        version: 4.2.1
+        specifier: ^4.2.2
+        version: 4.2.2
       ts-jest:
         specifier: ^29.1.0
         version: 29.4.6(@babel/core@7.29.0)(jest@30.2.0)(typescript@5.9.3)
@@ -6041,8 +6041,8 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-config-prettier@9.1.2(eslint@10.0.3):
-    resolution: {integrity: sha512-iI1f+D2ViGn+uvv5HuHVUamg8ll4tN+JRHGc6IJi4TP9Kl976C57fzPXgseXNs8v0iA8aSJpHsTWjDb9QJamGQ==}
+  /eslint-config-prettier@10.1.8(eslint@10.0.3):
+    resolution: {integrity: sha512-82GZUjRS0p/jganf6q1rEO25VSoHH0hKPCTrgillPjdI/3bgBhAE1QzHrHTizjpRvy6pGAvKjDJtk2pF9NDq8w==}
     hasBin: true
     peerDependencies:
       eslint: '>=7.0.0'
@@ -10208,6 +10208,11 @@ packages:
 
   /tailwindcss@4.2.1:
     resolution: {integrity: sha512-/tBrSQ36vCleJkAOsy9kbNTgaxvGbyOamC30PRePTQe/o1MFwEKHQk4Cn7BNGaPtjp+PuUrByJehM1hgxfq4sw==}
+    dev: false
+
+  /tailwindcss@4.2.2:
+    resolution: {integrity: sha512-KWBIxs1Xb6NoLdMVqhbhgwZf2PGBpPEiwOqgI4pFIYbNTfBXiKYyWoTsXgBQ9WFg/OlhnvHaY+AEpW7wSmFo2Q==}
+    dev: true
 
   /tapable@2.3.0:
     resolution: {integrity: sha512-g9ljZiwki/LfxmQADO3dEY1CbpmXT5Hm2fJ+QaGKwSXUylMybePR7/67YW7jOrrvjEgL1Fmz5kzyAjWVWLlucg==}
