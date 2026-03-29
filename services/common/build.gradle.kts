@@ -18,7 +18,7 @@ dependencies {
     implementation("org.springframework.kafka:spring-kafka:4.0.4")
 
     // Jackson for JSON serialization
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.1")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.2")
 
     // Servlet API
     implementation("jakarta.servlet:jakarta.servlet-api:6.1.0")
